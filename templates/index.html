@@ -5,10 +5,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to Tarot Card Reading</title>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            margin: auto;
+            padding: 0;
+            justify-content: center;
+            align-items: center;
+        }
+
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            margin: auto;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #4b0082;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0e3ff;
+        }
+
+        button {
+            background-color: #4b0082;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #6f02bd;
+            border: 1px solid #c26dff;
+        }
+    </style>
+
+    <script type="text/javascript">
+        function check(event) {
+            var name = document.getElementById("name").value;
+            var question = document.getElementById("question").value;
+            var number = document.getElementById("number").value;
+
+            if (name == "" || question == "" || number == "") {
+                alert("Please fill in all fields");
+            }
+        }
+
+    </script>
 </head>
 
 <body>
     <h1>Welcome to Tarot Card Reading</h1>
+
 
     <form action="/" method="post">
         <label for="name">What's Your Name?</label>
@@ -21,7 +95,7 @@
         <br>
         <input type="number" id="number" name="number" required step="1" min="1" max="6">
 
-        <button type="submit">Submit</button>
+        <button onclick="check()" type="submit">Submit</button>
         <button type="reset">Reset</button>
     </form>
 

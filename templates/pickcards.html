@@ -7,40 +7,191 @@
     <title>Pick Your Cards</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 20px;
-        }
-        
-        .cards-container {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
+            align-items: center;
         }
-        
-        .card {
-            border: 1px solid #ccc;
+
+        div#bigDiv {
+            margin-top: 3%;
+            margin-left: 10%;
+            margin-right: 10%;
+            background: #fff;
+            padding: 20px;
             border-radius: 10px;
-            padding: 10px;
-            width: 150px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
             text-align: center;
         }
-        
+
+        h1,
+        h2 {
+            color: #4b0082;
+        }
+
+        h3 {
+            color: #6f02bd;
+            margin: 10px 0;
+        }
+
+        .cards-container,
+        #img-container,
+        #description-container,
+        #meaning-container {
+            margin-top: 20px;
+        }
+
+        .card {
+            display: inline-block;
+            margin: 10px;
+        }
+
         .card img {
-            width: 100%;
-            border-radius: 8px;
+            width: 180px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease-in-out;
+        }
+
+        h5 {
+            margin: 10px 0;
+            color: #7e0ccf;
+        }
+
+        h4 {
+            color: #4b0082;
+        }
+
+        #description-container h5 {
+            display: none;
+        }
+
+        #meaning-container h5 {
+            display: none;
+        }
+
+        img:hover {
+            cursor: pointer;
+            transform: scale(1.1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
         }
     </style>
+
+    <script type="text/javascript">
+        function imgDirection() {
+            var images = document.querySelectorAll("#img-container .card img");
+            var cards = document.querySelectorAll(".cards-container h4");
+
+            for (var i = 0; i < cards.length; i++) {
+                if ("Upward" in cards[i].innerHTML) {
+                    images[i].style.transform = "rotate(0deg)";
+                } else if ("Reversed" in cards[i].innerHTML) {
+                    images[i].style.transform = "rotate(180deg)";
+                }
+            }
+        }
+
+        function showDM(id) {
+            var cardIndex = id.split("-")[1];
+            var cardName = document.getElementById("card-" + cardIndex).innerHTML;
+
+            var cardImg = document.getElementById(id);
+
+            var description = document.getElementById("description-" + cardIndex);
+            var meaning = document.getElementById("meaning-" + cardIndex);
+            var descriptionTitle = document.getElementById("descriptionTitle-" + cardIndex);
+            var meaningTitle = document.getElementById("meaningTitle-" + cardIndex);
+
+            if (description.style.display === "none") {
+
+                cardImg.style.transition = "all 0.2s ease-in-out";
+                cardImg.style.border = "5px solid purple";
+
+                description.style.display = "block";
+                meaning.style.display = "block";
+                descriptionTitle.innerHTML = "Description of " + cardName;
+                meaningTitle.innerHTML = "Meaning of " + cardName;
+
+
+                meaning.style.transition = "all 0.5s ease-in-out";
+                description.style.transition = "all 0.5s ease-in-out";
+                descriptionTitle.style.transition = "all 0.5s ease-in-out";
+                meaningTitle.style.transition = "all 0.5s ease-in-out";
+
+
+            } else {
+                cardImg.style.border = "none";
+
+                description.style.display = "none";
+                meaning.style.display = "none";
+
+                descriptionTitle.innerHTML = "";
+                meaningTitle.innerHTML = "";
+            }
+        }
+
+        function directionAdjust() {
+            var images = document.querySelectorAll("#img-container .card img");
+            var cards = document.querySelectorAll(".cards-container h3");
+
+            for (var i = 0; i < cards.length; i++) {
+                if (cards[i].innerHTML.includes("Upward")) {
+                    images[i].style.transform = "rotate(0deg)";
+                } else if (cards[i].innerHTML.includes("Reversed")) {
+                    images[i].style.transform = "rotate(180deg)";
+                }
+            }
+        }
+
+        window.onload = directionAdjust;
+
+
+    </script>
+
 </head>
 
-<body>
+<body onload="directionAdjust()">
 
-    <form action="/pickcards" method="post">
-        <h1> Hi {{name}} !</h1>
-        <h2>Here are your cards for the question: {{question}}</h2>
+    <div id="bigDiv">
+        <div class="cards-container">
+            <h1> Hi {{name}} !</h1>
+            <h2>Here are your cards for the question: {{question}}</h2>
 
-    </form>
+            {% for card in cards %}
+            <h3 id="card-{{loop.index}}">{{ card }}</h3>
+            {% endfor %}
+        </div>
+
+        <div id="img-container">
+            {% for img in images %}
+            <div class="card">
+                <img id="img-{{loop.index}}" onclick="showDM(this.id)" src="{{ img }}" alt="Card Image">
+            </div>
+            {% endfor %}
+        </div>
+
+        <div id="description-container">
+            {% for description in descriptions %}
+            <h4 id="descriptionTitle-{{loop.index}}"></h4>
+            <h5 id="description-{{loop.index}}">{{ description }}</h5>
+            {% endfor %}
+        </div>
+        <div id="meaning-container">
+            {% for meaning in meanings %}
+            <h4 id="meaningTitle-{{loop.index}}"></h4>
+            <h5 id="meaning-{{ loop.index }}">{{ meaning }}</h5>
+            {% endfor %}
+        </div>
+
+
+
+
+    </div>
 
 </body>
 

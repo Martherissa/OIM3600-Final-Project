@@ -38,20 +38,20 @@ def index():
 @app.route("/pickcards", methods=["GET", "POST"])
 def pickcards():
 
-    # cards = session.get("cards")
-    # images = session.get("images")
-    # description = session.get("description")
-    # meaning = session.get("meaning")
+    cards = session.get("cards")
+    images = session.get("images")
+    description = session.get("description")
+    meaning = session.get("meaning")
 
     name = session.get("name")
     question = session.get("question")
 
     return render_template(
         "pickcards.html",
-        # cards=cards,
-        # descriptions=description,
-        # meanings=meaning,
-        # images=images,
+        cards=cards,
+        descriptions=description,
+        meanings=meaning,
+        images=images,
         name=name,
         question=question,
     )
