@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pick Your Cards</title>
+    <title>Here are your readings!</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -77,47 +77,99 @@
 
         img:hover {
             cursor: pointer;
-            transform: scale(1.1);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+        }
+
+
+        button#return {
+            position: relative;
+            background-color: #4b0082;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 1%;
+            transition: all 0.3s ease;
+        }
+
+        button#return:hover {
+            background-color: #6f02bd;
+            border: 1px solid #c26dff;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 10px;
+            }
+
+            div#bigDiv {
+                margin: 5% 0;
+                width: 100%;
+                padding: 10px;
+            }
+
+            .cards-container,
+            #img-container,
+            #description-container,
+            #meaning-container {
+                margin-top: 10px;
+            }
+
+            .card img {
+                width: 100%;
+                margin: 5px 0;
+            }
+
+            button#return {
+                width: 100%;
+                padding: 15px;
+            }
         }
     </style>
 
     <script type="text/javascript">
-        function imgDirection() {
-            var images = document.querySelectorAll("#img-container .card img");
-            var cards = document.querySelectorAll(".cards-container h4");
-
-            for (var i = 0; i < cards.length; i++) {
-                if ("Upward" in cards[i].innerHTML) {
-                    images[i].style.transform = "rotate(0deg)";
-                } else if ("Reversed" in cards[i].innerHTML) {
-                    images[i].style.transform = "rotate(180deg)";
-                }
-            }
-        }
-
+        // This function shows the description and meaning of each card
+        // input is the id of the image clicked
         function showDM(id) {
+            // get the index of the card clicked
+            // split by - and extract the latter part
             var cardIndex = id.split("-")[1];
+
+            // get the name of the card based on the id
+            // loop.index is the index of the card in the loop
             var cardName = document.getElementById("card-" + cardIndex).innerHTML;
 
+            // get the image clicked (the id is simply the inputted id)
             var cardImg = document.getElementById(id);
 
+            // get the description and meaning of the card based on id
             var description = document.getElementById("description-" + cardIndex);
             var meaning = document.getElementById("meaning-" + cardIndex);
+
+            // get the title of the description and meaning based on id
             var descriptionTitle = document.getElementById("descriptionTitle-" + cardIndex);
             var meaningTitle = document.getElementById("meaningTitle-" + cardIndex);
 
+            // if the description is hidden, show the description and meaning
+            // Note that initially all descriptions and meanings are hidden
             if (description.style.display === "none") {
 
+                // Add a transition so the animation is more smooth
                 cardImg.style.transition = "all 0.2s ease-in-out";
+                // add a border to the image so it is more visible
                 cardImg.style.border = "5px solid purple";
 
+                // Display as block so it is visible
+                // Add innerHTML which are basically the texts for titles of the description and meaning
                 description.style.display = "block";
                 meaning.style.display = "block";
                 descriptionTitle.innerHTML = "Description of " + cardName;
                 meaningTitle.innerHTML = "Meaning of " + cardName;
 
-
+                // We are also adding transition so the animation is more smooth for all elements
                 meaning.style.transition = "all 0.5s ease-in-out";
                 description.style.transition = "all 0.5s ease-in-out";
                 descriptionTitle.style.transition = "all 0.5s ease-in-out";
@@ -125,6 +177,8 @@
 
 
             } else {
+                // if the description is shown, hide the description and meaning
+                // remove the border from the image and the titles text
                 cardImg.style.border = "none";
 
                 description.style.display = "none";
@@ -135,19 +189,29 @@
             }
         }
 
+        // This function checks whether the card is upright or reversed
+        // and rotates the image accordingly
         function directionAdjust() {
+            // select images under branch of img-container with class card
+            // select cards under branch of cards-container with class h4
             var images = document.querySelectorAll("#img-container .card img");
             var cards = document.querySelectorAll(".cards-container h3");
 
+            // loop through the cards and check if the card is upright or reversed
             for (var i = 0; i < cards.length; i++) {
+                // if the card contains the word "Upward", rotate the image to 0 degrees
                 if (cards[i].innerHTML.includes("Upward")) {
                     images[i].style.transform = "rotate(0deg)";
+                    // if the card contains the word "Reversed", rotate the image to 180 degrees
+                    // so the card is upside down
                 } else if (cards[i].innerHTML.includes("Reversed")) {
                     images[i].style.transform = "rotate(180deg)";
                 }
             }
         }
 
+        // call the function directionAdjust when the window is loaded
+        // this is necessary for all onload functions in javascriptS
         window.onload = directionAdjust;
 
 
@@ -155,19 +219,28 @@
 
 </head>
 
+<!-- Specify onload function -->
+
 <body onload="directionAdjust()">
 
+    <!-- The "bigDiv" contains all the elements -->
+    <!-- id added for easier CSS -->
     <div id="bigDiv">
         <div class="cards-container">
             <h1> Hi {{name}} !</h1>
             <h2>Here are your cards for the question: {{question}}</h2>
 
+            <!-- Loop through the cards list and for each card -->
+            <!-- Add an id following the format: card-1, card-2... -->
             {% for card in cards %}
             <h3 id="card-{{loop.index}}">{{ card }}</h3>
             {% endfor %}
         </div>
 
         <div id="img-container">
+            <!-- Loop through the images list and for each image -->
+            <!-- Add an id following the format: img-1, img-2... -->
+            <!-- Added a card class div for easier CSS and document selection in javascript -->
             {% for img in images %}
             <div class="card">
                 <img id="img-{{loop.index}}" onclick="showDM(this.id)" src="{{ img }}" alt="Card Image">
@@ -176,22 +249,30 @@
         </div>
 
         <div id="description-container">
+            <!-- Loop through the descriptions list and for each description -->
+            <!-- Add an id following the format: description-1, description-2... -->
             {% for description in descriptions %}
             <h4 id="descriptionTitle-{{loop.index}}"></h4>
             <h5 id="description-{{loop.index}}">{{ description }}</h5>
             {% endfor %}
         </div>
         <div id="meaning-container">
+            <!-- Loop through the meanings list and for each meaning -->
+            <!-- Add an id following the format: meaning-1, meaning-2... -->
             {% for meaning in meanings %}
             <h4 id="meaningTitle-{{loop.index}}"></h4>
             <h5 id="meaning-{{ loop.index }}">{{ meaning }}</h5>
             {% endfor %}
         </div>
 
-
-
-
+        <!-- User can click the button to ask another question -->
+        <!-- they will be rerouted back to index page based on ask_another() in app.py -->
+        <form action="/ask_another" method="get">
+            <button id="return" type="submit">Ask Another Question</button>
+        </form>
     </div>
+
+
 
 </body>
 

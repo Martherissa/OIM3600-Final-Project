@@ -67,6 +67,8 @@
     </style>
 
     <script type="text/javascript">
+        // This function checks is the form is filled out
+        // if not: sent an alert
         function check(event) {
             var name = document.getElementById("name").value;
             var question = document.getElementById("question").value;
@@ -77,6 +79,18 @@
             }
         }
 
+        // This function makes the form responsive:
+        // Meaning that the layout of the form changes when the screen size changes:
+        // if the screen is smaller than 600px, the form width is 90%
+        // if the screen is larger than 600px, the form width is 100%
+        window.addEventListener('resize', function () {
+            var form = document.querySelector('form');
+            if (window.innerWidth < 600) {
+                form.style.width = '90%';
+            } else {
+                form.style.width = '100%';
+            }
+        });
     </script>
 </head>
 
@@ -84,21 +98,36 @@
     <h1>Welcome to Tarot Card Reading</h1>
 
 
+    <!-- This is the form where the data will be send to the pick_cards page -->
     <form action="/" method="post">
+        <!-- If the there is non empty name variable in session: display name -->
+        <!-- Else: ask for input (the field is required)-->
+        {% if session.name %}
+        <h3>Hi {{ session.name }}!</h3>
+        {% else %}
         <label for="name">What's Your Name?</label>
         <input type="text" id="name" name="name" required>
+        {% endif %}
+
         <br>
+        <!-- Question is in the form of text (field is required)-->
         <label for="question">What's Your Question?</label>
         <input type="text" id="question" name="question" required>
 
+        <!-- Numbers inputted must be integers with increment of 1, and minimum of 1 and maximum of 6 (field is required)-->
         <label for="number">How many cards do you wish to pick?</label>
         <br>
         <input type="number" id="number" name="number" required step="1" min="1" max="6">
 
+        <!-- When click the submit button, the javascript function checks if all fields are filled out -->
         <button onclick="check()" type="submit">Submit</button>
         <button type="reset">Reset</button>
     </form>
 
+    <!-- If click this button, the user can input another username -->
+    <form action="/logout" method="get">
+        <button id="return" type="submit">Log Out</button>
+    </form>
 </body>
 
 </html>
