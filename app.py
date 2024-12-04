@@ -2,6 +2,7 @@ from flask import Flask, redirect, render_template, request, session, url_for
 import os
 from flask_session import Session
 import json
+from dotenv import load_dotenv
 
 from function import (
     random_card,
@@ -13,6 +14,9 @@ from function import (
 
 # Specify the folder where the templates are stored
 app = Flask(__name__, template_folder="templates")
+
+# Extract the secret key from the .env file (protects the session data)
+app.secret_key = os.getenv("FLASK_SECRET_KEY")
 
 # Set app secret key to make the session secure
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
